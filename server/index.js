@@ -11,16 +11,16 @@ const connection = mysql.createConnection({
     database: "collabreact"
 })
 
+connection.connect();
+
 app.use(cors())
 
 app.get('/', (req, res) => {
-    connection.connect();
     // On selectionne les 10 categories qui ont eu les sujets les plus actifs recemment
     connection.query("SELECT * FROM Category INNER JOIN Subject on Category.id = Subject.category_id ORDER BY Subject.modified_at DESC LIMIT 10", (err, results) => {
         if(err)return console.error(err);
         res.send(results);
     });
-    connection.end();
 })
 
 app.post("/category", (req,res) => {
