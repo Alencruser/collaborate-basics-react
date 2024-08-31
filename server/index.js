@@ -8,6 +8,7 @@ const connection = mysql.createConnection({
     host: security.host,
     user: security.user,
     password: security.password,
+    database: "collabreact"
 })
 
 app.use(cors())
@@ -20,7 +21,6 @@ app.get('/', (req, res) => {
         res.send(results);
     });
     connection.end();
-    res.send([]);
 })
 
 app.post("/category", (req,res) => {
