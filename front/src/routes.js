@@ -1,6 +1,6 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 import App from "./App";
-import CreateCategory from "./Category/create-category";
+import CreateCategory from "./Category/CreateCategory";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
