@@ -7,6 +7,9 @@ function CreateCategory() {
         const titleValue = document.querySelector("[name='Titre']")?.value;
         const tryToCreate = await fetch(`http://localhost:8080/category`, {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json" 
+            },
             body: JSON.stringify({ title:titleValue })
         });
         const data = await tryToCreate.json();
