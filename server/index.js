@@ -13,7 +13,9 @@ const connection = mysql.createConnection({
 
 connection.connect();
 
-app.use(cors())
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
     // On selectionne les 10 categories qui ont eu les sujets les plus actifs recemment
@@ -24,7 +26,16 @@ app.get('/', (req, res) => {
 })
 
 app.post("/category", (req,res) => {
-    console.log(req);
+    const sanitizedTitle = req.body.title;
+    // add verification later for user connected or not, or duplicate name, and sanitize input with blbl
+    if(!sanitizedTitle?.length)return res.send(false);
+    connection.query(`INSERT INTO Category (name, created_at, approved) VALUES ('${sanitizedTitle}',NOW(), 0)`, (err, results) => {
+        if(err){
+            console.error(err);
+            return res.send(false)
+          }
+          res.send(true);
+    });
 });
 
 
