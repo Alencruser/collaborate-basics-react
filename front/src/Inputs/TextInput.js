@@ -2,7 +2,7 @@ import "./TextInput.css";
 
 function TextInput({placeholder, name, value = ""}) {
     return (
-        <input type="text" name={name} placeholder={placeholder} value={value}/>
+        <input type="text" name={name} placeholder={placeholder} defaultValue={value}/>
     )
 }
 
