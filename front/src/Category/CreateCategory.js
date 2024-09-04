@@ -1,10 +1,10 @@
-import TextInput from "../Inputs/TextInput";
+import { Button, Form } from "react-bootstrap";
 import "./CreateCategory.css";
 
 function CreateCategory() {
     const submitForm = async (event) => {
         event.preventDefault();
-        const titleValue = document.querySelector("[name='Titre']")?.value;
+        const titleValue = document.querySelector("#category-label")?.value;
         const tryToCreate = await fetch(`http://localhost:8080/category`, {
             method: "POST",
             headers: {
@@ -22,10 +22,13 @@ function CreateCategory() {
 
     return (
         <div className='CreateCategory'>
-            <form id="create-category">
-                <TextInput name="Titre" placeholder="Titre de la categorie" />
-                <button onClick={submitForm}>Faire la demande de creation de categorie</button>
-            </form>
+            <Form id="create-category">
+                <Form.Group className="mb-3" controlId="category-label">
+                    <Form.Label>Titre de la categorie</Form.Label>
+                    <Form.Control type="text" placeholder="Titre de la categorie"></Form.Control>
+                </Form.Group>
+                <Button onClick={submitForm}>Faire la demande de creation de categorie</Button>
+            </Form>
         </div>
     );
 }

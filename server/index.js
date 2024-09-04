@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
         if(err)return console.error(err);
         res.send(results);
     });
-})
+});
 
 app.post("/category", (req,res) => {
     const sanitizedTitle = req.body.title;
