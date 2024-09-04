@@ -11,6 +11,22 @@ const connection = mysql.createConnection({
     database: "collabreact"
 })
 
+//Securisation input
+const blbl = (str) => {
+	if (str == null) return '';
+	return String(str).
+		replace(/&/g, '&amp;').
+		replace(/</g, '&lt;').
+		replace(/>/g, '&gt;').
+		replace(/"/g, '&quot;').
+		replace(/--/g, '&#151;').
+		replace(/'/g, '&#039;');
+};
+
+const mysqlError = {
+    1062: "Duplication de nom"
+}
+
 connection.connect();
 
 app.use(cors());
@@ -26,16 +42,15 @@ app.get('/', (req, res) => {
 });
 
 app.post("/category", (req,res) => {
-    const sanitizedTitle = req.body.title;
+    const sanitizedTitle = blbl(req.body.title);
     // add verification later for user connected or not, or duplicate name, and sanitize input with blbl
     if(!sanitizedTitle?.length)return res.send(false);
-    connection.query(`INSERT INTO Category (name, created_at, approved) VALUES ('${sanitizedTitle}',NOW(), 0)`, (err, results) => {
-        if(err){
-            console.error(err);
-            return res.send(false)
-          }
-          res.send(true);
-    });
+        connection.query(`INSERT INTO Category (name, created_at, approved) VALUES ('${sanitizedTitle}',NOW(), 0)`, (err, results) => {
+            if(err){
+                return res.status(500).send(JSON.stringify({err: mysqlError[err.errno]}));
+              }
+              res.send(JSON.stringify({success: true}));
+        });
 });
 
 
