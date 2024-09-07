@@ -1,4 +1,4 @@
-import { Button, Form } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "./CreateCategory.css";
 
 function CreateCategory() {
@@ -21,15 +21,21 @@ function CreateCategory() {
     };
 
     return (
-        <div className='CreateCategory'>
-            <Form id="create-category">
-                <Form.Group className="mb-3" controlId="category-label">
-                    <Form.Label>Titre de la categorie</Form.Label>
-                    <Form.Control type="text" placeholder="Titre de la categorie"></Form.Control>
-                </Form.Group>
-                <Button onClick={submitForm}>Faire la demande de creation de categorie</Button>
-            </Form>
-        </div>
+        <Container fluid className="container-create-category">
+            <Row>
+                <Col md={{span:3, offset:4}}>
+                    <div className='CreateCategory'>
+                        <Form id="create-category">
+                            <Form.Group className="mb-3" controlId="category-label">
+                                <Form.Label>Titre de la categorie</Form.Label>
+                                <Form.Control type="text" placeholder="Titre de la categorie"></Form.Control>
+                            </Form.Group>
+                            <Button onClick={submitForm}>Faire la demande de creation de categorie</Button>
+                        </Form>
+                    </div>
+                </Col>   
+            </Row>
+        </Container>
     );
 }
 
