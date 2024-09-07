@@ -1,7 +1,13 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "./CreateCategory.css";
+import ErrorModal from "../Modals/ErrorModal";
+import { useState } from "react";
 
 function CreateCategory() {
+
+    const [show, setShow] = useState(false);
+    const [err, setErr] = useState("");
+
     const submitForm = async (event) => {
         event.preventDefault();
         const titleValue = document.querySelector("#category-label")?.value;
@@ -15,7 +21,8 @@ function CreateCategory() {
         const data = await tryToCreate.json();
         if(data?.success) return true;
         else {
-            // message d'erreur
+            setErr(data?.err);
+            setShow(true);
         }
         document.querySelector("#create-category").reset();
     };
@@ -35,6 +42,7 @@ function CreateCategory() {
                     </div>
                 </Col>   
             </Row>
+            <ErrorModal show={show} changeShow={setShow} err={err}></ErrorModal>
         </Container>
     );
 }
