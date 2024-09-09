@@ -5,10 +5,12 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { RouterProvider } from "react-router-dom"
 import { router } from './routes';
+import NavB from './Navbar/Navbar';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <NavB />
     <RouterProvider router={ router }/>
   </React.StrictMode>
   

@@ -28,6 +28,7 @@ function CreateCategory() {
     };
 
     return (
+
         <Container fluid className="container-create-category">
             <Row>
                 <Col md={{span:3, offset:4}}>
