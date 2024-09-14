@@ -33,7 +33,7 @@ function CreateCategory() {
             <Row>
                 <Col md={{span:3, offset:4}}>
                     <div className='CreateCategory'>
-                        <Form id="create-category">
+                        <Form id="create-category" onSubmit={submitForm}>
                             <Form.Group className="mb-3" controlId="category-label">
                                 <Form.Label>Titre de la categorie</Form.Label>
                                 <Form.Control type="text" placeholder="Titre de la categorie"></Form.Control>
