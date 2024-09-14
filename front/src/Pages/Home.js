@@ -1,8 +1,12 @@
-
+import {Outlet} from "react-router-dom";
+import  NavB  from "../Navbar/Navbar"
 
 function Home() {
     return (
-        <div>Bonjour les copains</div>
+        <div>
+            <NavB />
+            <Outlet/>
+        </div>
     )
 }
 

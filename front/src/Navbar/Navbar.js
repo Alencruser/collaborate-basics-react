@@ -19,6 +19,12 @@ function NavB() {
                 Creer une categorie
               </NavDropdown.Item>
             </NavDropdown>
+            <NavDropdown title="S'inscrire/Se connecter">
+              <NavDropdown.Item href="/signin?type=register">S'inscrire</NavDropdown.Item>
+              <NavDropdown.Item href="/signin?type=connection">
+                Se connecter
+              </NavDropdown.Item>
+            </NavDropdown>
           </Nav>
         </Navbar.Collapse>
       </Container>
