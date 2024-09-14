@@ -1,6 +1,6 @@
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "./CreateCategory.css";
-import ErrorModal from "../Modals/ErrorModal";
+import ErrorModal from "../../Modals/ErrorModal";
 import { useState } from "react";
 
 function CreateCategory() {
