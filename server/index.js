@@ -105,6 +105,11 @@ app.post("/connect", (req,res) => {
 
 });
 
+app.get("/destroy",  (req,res) => {
+    req.session.destroy();
+    res.send(JSON.stringify({data:{success:true}}));
+});
+
 // laissez ce app use a la fin, il vient s'appliquer sur toutes les routes API que l'on a pas fait
 app.use(function(req, res, next) {
     res.status(404);
