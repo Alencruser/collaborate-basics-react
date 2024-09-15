@@ -35,8 +35,11 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(session({ 
     secret:security.secretSession,
-    cookie: { maxAge: 60000 }
-}))
+    cookie: { maxAge: 60000 },
+    resave: false,
+    saveUninitialized:true
+}));
+
 
 app.get('/', (req, res) => {
     // On selectionne les 10 categories qui ont eu les sujets les plus actifs recemment
@@ -49,7 +52,7 @@ app.get('/', (req, res) => {
 app.post("/category", (req,res) => {
     const sanitizedTitle = blbl(req.body.title);
     // add verification later for user connected or not, or duplicate name, and sanitize input with blbl
-    if(!sanitizedTitle?.length)return res.send(false);
+    if(!sanitizedTitle?.length)return res.status(500).send(JSON.stringify({err: "Probleme serveur"}));
         connection.query(`INSERT INTO Category (name, created_at, approved) VALUES ('${sanitizedTitle}',NOW(), 0)`, (err, results) => {
             if(err){
                 return res.status(500).send(JSON.stringify({err: mysqlError[err.errno]}));
@@ -58,6 +61,11 @@ app.post("/category", (req,res) => {
         });
 });
 
+// laissez ce app use a la fin, il vient s'appliquer sur toutes les routes API que l'on a pas fait
+app.use(function(req, res, next) {
+    res.status(404);
+    res.send(JSON.stringify({err: "Page introuvable"}));
+});
 
 app.listen(8080, () => {
     console.log('server listening on port  8080')
