@@ -1,15 +1,48 @@
+import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { useSearchParams } from "react-router-dom";
 import ErrorModal from "../../Modals/ErrorModal";
-import { useState } from "react";
 
 function SignIn () {
 
     const [show, setShow] = useState(false);
     const [err, setErr] = useState("");
+    
+    const [queryParams] = useSearchParams();
+    const [isRegister, setIsRegister] = useState();
 
-    const submitForm = (event) => {
+    useEffect(()=> {
+        setIsRegister(queryParams.get("type") === "register");
+    }, [queryParams,setIsRegister])
+
+    const submitForm = async (event) => {
         event.preventDefault();
-        setErr("moman")
+        const action = isRegister ? "register" : "connect";
+        const formData = new FormData(document.querySelector("#signin"))
+        const body = formData.keys().reduce((acc,key) => {
+            if(formData.get(key))acc[key] = formData.get(key);
+            return acc;
+        }, {});
+        // Ajouter des verifs cote front (required devrait suffir ?)
+        try {
+            const request = await fetch(`http://localhost:8080/${action}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+            const response = await request.json();
+            if(!request?.ok){
+                setErr(response.err);
+                setShow(true);
+            }
+
+        } catch(err) {
+                // erreur
+                setErr(JSON.stringify(err));
+                setShow(true);
+        }
     };
 
     return (
@@ -20,14 +53,26 @@ function SignIn () {
                         <Form id="signin" onSubmit={submitForm}>
                             <Form.Group className="mb-3" controlId="user-nickname">
                                 <Form.Label>Pseudo</Form.Label>
-                                <Form.Control type="text" placeholder="Pseudo"></Form.Control>
+                                <Form.Control type="text" placeholder="Pseudo" name="user-nickname"></Form.Control>
                             </Form.Group>
-                            <Button onClick={submitForm}>Creer son compte</Button>
+                            <Form.Group className="mb-3" controlId="user-mail" hidden={!isRegister}>
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control type="text" placeholder="Email" name="user-mail"></Form.Control>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="user-pass">
+                                <Form.Label>Mot de passe</Form.Label>
+                                <Form.Control type="text" placeholder="Mot de passe" name="user-pass"></Form.Control>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="user-birthdate" hidden={!isRegister}>
+                                <Form.Label>Date de naissance</Form.Label>
+                                <Form.Control type="date" placeholder="Date de naissance" name="user-birthdate"></Form.Control>
+                            </Form.Group>
+                            <Button onClick={submitForm}>{isRegister? `Creer son compte` : `Se connecter`}</Button>
                         </Form>
                     </div>
                 </Col>
             </Row>
-            <ErrorModal show={show} changeShow={setShow} err={err}></ErrorModal>
+            <ErrorModal show={show} changeShow={setShow} err={err} />
         </Container>
     )
 }
