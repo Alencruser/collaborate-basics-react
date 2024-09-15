@@ -11,17 +11,16 @@ function CreateCategory() {
     const submitForm = async (event) => {
         event.preventDefault();
         const titleValue = document.querySelector("#category-label")?.value;
-        const tryToCreate = await fetch(`http://localhost:8080/category`, {
+        const request = await fetch(`http://localhost:8080/category`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json" 
             },
             body: JSON.stringify({ title:titleValue })
         });
-        const data = await tryToCreate.json();
-        if(data?.success) return true;
-        else {
-            setErr(data?.err);
+        const response = await request.json()
+        if(!request?.ok) {
+            setErr(response?.err);
             setShow(true);
         }
         document.querySelector("#create-category").reset();
@@ -43,7 +42,7 @@ function CreateCategory() {
                     </div>
                 </Col>   
             </Row>
-            <ErrorModal show={show} changeShow={setShow} err={err}></ErrorModal>
+            <ErrorModal show={show} changeShow={setShow} err={err} />
         </Container>
     );
 }
