@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const security = require("./security.js");
 const session = require('express-session');
+const bcrypt = require("bcrypt");
+
 
 const connection = mysql.createConnection({
     host: security.host,
@@ -25,7 +27,8 @@ const blbl = (str) => {
 };
 
 const mysqlError = {
-    1062: "Duplication de nom"
+    1062: "Duplication de nom",
+    1452: "Probleme inconnu, veuillez contacter l'administrateur"
 }
 
 connection.connect();
@@ -45,7 +48,7 @@ app.get('/', (req, res) => {
     // On selectionne les 10 categories qui ont eu les sujets les plus actifs recemment
     connection.query("SELECT * FROM Category INNER JOIN Subject on Category.id = Subject.category_id ORDER BY Subject.modified_at DESC LIMIT 10", (err, results) => {
         if(err)return console.error(err);
-        res.send(JSON.stringify(results));
+        res.send(JSON.stringify({data: results}));
     });
 });
 
@@ -57,8 +60,49 @@ app.post("/category", (req,res) => {
             if(err){
                 return res.status(500).send(JSON.stringify({err: mysqlError[err.errno]}));
               }
-              res.send(JSON.stringify({success: true}));
+              res.send(JSON.stringify({data: {success:true}}));
         });
+});
+
+app.post("/register", (req,res) => {
+    const pseudo = blbl(req.body["user-nickname"]);
+    const mail = blbl(req.body["user-mail"]);
+    const pass = blbl(req.body["user-pass"]);
+    const birth = blbl(req.body["user-birthdate"]);
+
+    bcrypt.hash(pass, 10, (err, hashedPass) => {
+        connection.query(`INSERT INTO User (pseudo, mail, pass, birth_date, created_at, last_connection, role) VALUES ('${pseudo}', '${mail}', '${hashedPass}', '${birth}', NOW(), NOW(), 1)`, (err, results) => {
+            if(err){
+                console.log(err)
+                return res.status(500).send(JSON.stringify({err: mysqlError[err.errno]}));
+              }
+              req.session.id = pseudo;
+              req.session.role = 1;
+              res.send(JSON.stringify({data:{pseudo, role: 1}}))
+        });
+    });
+
+});
+
+app.post("/connect", (req,res) => {
+    const pseudo = blbl(req.body["user-nickname"]);
+    const pass = blbl(req.body["user-pass"]);
+
+    connection.query(`SELECT pseudo, pass, role FROM User WHERE pseudo = '${pseudo}'`, (errSql, results) => {
+        if(errSql){
+            console.log(errSql)
+            return res.status(500).send(JSON.stringify({err: mysqlError[errSql.errno]}));
+        }
+        bcrypt.compare(pass, results[0].pass, (err, samePass) => {
+              if(!results.length || !samePass) {
+                return res.status(500).send({err: "Nom de compte ou mot de passe incorrect"})
+              }
+              req.session.id = pseudo;
+              req.session.role = 1;
+              res.send(JSON.stringify({data:{pseudo, role: 1}}))
+        });
+    });
+
 });
 
 // laissez ce app use a la fin, il vient s'appliquer sur toutes les routes API que l'on a pas fait
@@ -69,4 +113,4 @@ app.use(function(req, res, next) {
 
 app.listen(8080, () => {
     console.log('server listening on port  8080')
-})
+});
