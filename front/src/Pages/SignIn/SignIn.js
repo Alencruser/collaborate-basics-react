@@ -14,7 +14,13 @@ function SignIn () {
 
     useEffect(()=> {
         setIsRegister(queryParams.get("type") === "register");
-    }, [queryParams,setIsRegister])
+    }, [queryParams,setIsRegister]);
+
+    const connectWithMyInfos = (connectInfos) => {
+
+        localStorage.setItem("pseudo", connectInfos.pseudo);
+        localStorage.setItem("role", connectInfos.role);
+    }
 
     const submitForm = async (event) => {
         event.preventDefault();
@@ -29,6 +35,8 @@ function SignIn () {
             if(!response?.ok){
                 setErr(response.data);
                 setShow(true);
+            } else {
+                connectWithMyInfos(response.data)
             }
         
     };
@@ -49,7 +57,7 @@ function SignIn () {
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="user-pass">
                                 <Form.Label>Mot de passe</Form.Label>
-                                <Form.Control type="text" placeholder="Mot de passe" name="user-pass"></Form.Control>
+                                <Form.Control type="password" placeholder="Mot de passe" name="user-pass"></Form.Control>
                             </Form.Group>
                             <Form.Group className="mb-3" controlId="user-birthdate" hidden={!isRegister}>
                                 <Form.Label>Date de naissance</Form.Label>
