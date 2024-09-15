@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import ErrorModal from "../../Modals/ErrorModal";
+import apiFetch from "../../Utils/api";
 
 function SignIn () {
 
@@ -24,25 +25,12 @@ function SignIn () {
             return acc;
         }, {});
         // Ajouter des verifs cote front (required devrait suffir ?)
-        try {
-            const request = await fetch(`http://localhost:8080/${action}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            });
-            const response = await request.json();
-            if(!request?.ok){
-                setErr(response.err);
+            const response = await apiFetch(action, { method: "POST", body: JSON.stringify(body) })
+            if(!response?.ok){
+                setErr(response.data);
                 setShow(true);
             }
-
-        } catch(err) {
-                // erreur
-                setErr(JSON.stringify(err));
-                setShow(true);
-        }
+        
     };
 
     return (

@@ -2,6 +2,7 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import "./CreateCategory.css";
 import ErrorModal from "../../Modals/ErrorModal";
 import { useState } from "react";
+import apiFetch from "../../Utils/api";
 
 function CreateCategory() {
 
@@ -11,16 +12,9 @@ function CreateCategory() {
     const submitForm = async (event) => {
         event.preventDefault();
         const titleValue = document.querySelector("#category-label")?.value;
-        const request = await fetch(`http://localhost:8080/category`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json" 
-            },
-            body: JSON.stringify({ title:titleValue })
-        });
-        const response = await request.json()
-        if(!request?.ok) {
-            setErr(response?.err);
+        const response = await apiFetch("category", { method: "POST", body: JSON.stringify({ title:titleValue })})
+        if(!response?.ok) {
+            setErr(response?.data);
             setShow(true);
         }
         document.querySelector("#create-category").reset();
