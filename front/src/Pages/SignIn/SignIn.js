@@ -37,8 +37,10 @@ function SignIn () {
                 setShow(true);
             } else {
                 connectWithMyInfos(response.data)
+                document.querySelector("#signin").reset();
             }
-        
+
+
     };
 
     return (
