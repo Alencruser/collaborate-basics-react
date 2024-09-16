@@ -3,7 +3,8 @@ async function apiFetch(endpoint = "",config = {}) {
         method: "GET",
         headers: {
             "Content-Type": "application/json"
-        }
+        },
+        credentials: 'include'
     };
     const request = await fetch(`http://localhost:8080/${endpoint}`, {...baseConfig, ...config});
     const response = await request.json();

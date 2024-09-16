@@ -2,6 +2,8 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import apiFetch from '../Utils/api';
+import Connection from '../Utils/connection';
 
 function NavB() {
   return (
@@ -25,6 +27,12 @@ function NavB() {
                 Se connecter
               </NavDropdown.Item>
             </NavDropdown>
+            <Nav.Link href="/" onClick={ ()=> {
+              apiFetch("disconnect").then(() => {
+                Connection.disconnect();
+              })
+            }}>Se deconnecter</Nav.Link>
+
           </Nav>
         </Navbar.Collapse>
       </Container>
