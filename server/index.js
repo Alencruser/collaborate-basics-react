@@ -33,7 +33,10 @@ const mysqlError = {
 
 connection.connect();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+  }));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(session({ 
@@ -76,9 +79,11 @@ app.post("/register", (req,res) => {
                 console.log(err)
                 return res.status(500).send(JSON.stringify({err: mysqlError[err.errno]}));
               }
-              req.session.id = pseudo;
+              req.session.pseudo = pseudo;
               req.session.role = 1;
-              res.send(JSON.stringify({data:{pseudo, role: 1}}))
+              req.session.save((err)=>{
+                res.send(JSON.stringify({data:{pseudo, role: 1}}))
+            })
         });
     });
 
@@ -97,17 +102,23 @@ app.post("/connect", (req,res) => {
               if(!results.length || !samePass) {
                 return res.status(500).send({err: "Nom de compte ou mot de passe incorrect"})
               }
-              req.session.id = pseudo;
+              req.session.pseudo = pseudo;
               req.session.role = 1;
-              res.send(JSON.stringify({data:{pseudo, role: 1}}))
+              req.session.save((err)=>{
+                  console.log(req.session)
+                  res.send(JSON.stringify({data:{pseudo, role: 1}}))
+              })
         });
     });
 
 });
 
-app.get("/destroy",  (req,res) => {
-    req.session.destroy();
-    res.send(JSON.stringify({data:{success:true}}));
+app.get("/disconnect",  (req,res) => {
+    console.log("destruction asked for", req.session)
+    setTimeout(()=> {
+        // req.session.destroy();
+        res.send(JSON.stringify({data:{success:true}}));
+    }, 500)
 });
 
 // laissez ce app use a la fin, il vient s'appliquer sur toutes les routes API que l'on a pas fait
