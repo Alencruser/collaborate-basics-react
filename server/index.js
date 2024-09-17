@@ -98,7 +98,7 @@ app.post("/connect", (req,res) => {
             console.log(errSql)
             return res.status(500).send(JSON.stringify({err: mysqlError[errSql.errno]}));
         }
-        bcrypt.compare(pass, results[0].pass, (err, samePass) => {
+        bcrypt.compare(pass, results[0]?.pass, (err, samePass) => {
               if(!results.length || !samePass) {
                 return res.status(500).send({err: "Nom de compte ou mot de passe incorrect"})
               }
