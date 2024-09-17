@@ -3,6 +3,7 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 import ErrorModal from "../../Modals/ErrorModal";
 import apiFetch from "../../Utils/api";
+import "./SignIn.css"
 
 function SignIn () {
 
