@@ -1,4 +1,4 @@
-import { Toast } from "react-bootstrap";
+import { Toast, ToastContainer } from "react-bootstrap";
 import "./GenericToast.css"
 
 function GenericToast ({type = "Succes", text = "Action realisee avec succes", show = false , setShow}) {
@@ -12,8 +12,8 @@ function GenericToast ({type = "Succes", text = "Action realisee avec succes", s
     };
 
     return (
-        <div id="generic-toast">
-            <Toast delay={5000} autohide={true} bg={typeToVariant[type]} show={show} onClose={()=> {setShow(false)}} position='top-center'>
+        <ToastContainer id="generic-toast" position="bottom-center" className="position-fixed">
+            <Toast delay={5000} autohide={true} bg={typeToVariant[type]} show={show} onClose={()=> {setShow(false)}} >
                 <Toast.Header>
                     <strong className="me-auto">{type[0]?.toUpperCase() + type?.substring(1)}</strong>
                 </Toast.Header>
@@ -21,7 +21,7 @@ function GenericToast ({type = "Succes", text = "Action realisee avec succes", s
                     {text}
                 </Toast.Body>
             </Toast>
-        </div>
+        </ToastContainer>
     )
 }
 

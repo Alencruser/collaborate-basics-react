@@ -24,9 +24,9 @@ function CreateCategory() {
 
     return (
 
-        <Container fluid className="container-create-category">
-            <Row>
-                <Col md={{span:3, offset:4}}>
+        <Container fluid className="container-create-category position-relative">
+            <Row className="justify-content-center">
+                <Col md={{span:3}}>
                     <div className='CreateCategory'>
                         <Form id="create-category" onSubmit={submitForm}>
                             <Form.Group className="mb-3" controlId="category-label">
