@@ -16,9 +16,12 @@ function CreateCategory() {
         const response = await apiFetch("category", { method: "POST", body: JSON.stringify({ title:titleValue })})
         if(!response?.ok) {
             setTextToast(response?.data);
-            setShowToast(true);
             setTypeToast('error');
+        } else {
+            setTextToast('Action réalisée avec succés');
+            setTypeToast('success')
         }
+        setShowToast(true);
         document.querySelector("#create-category").reset();
     };
 
