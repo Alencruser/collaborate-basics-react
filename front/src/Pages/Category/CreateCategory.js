@@ -18,7 +18,7 @@ function CreateCategory() {
             setTextToast(response?.data);
             setTypeToast('error');
         } else {
-            setTextToast('Action réalisée avec succés');
+            setTextToast('Action réalisée avec succès');
             setTypeToast('success')
         }
         setShowToast(true);
