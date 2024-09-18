@@ -1,21 +1,23 @@
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import "./CreateCategory.css";
-import ErrorModal from "../../Modals/ErrorModal";
 import { useState } from "react";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import GenericToast from '../../GenericToast/GenericToast';
 import apiFetch from "../../Utils/api";
+import "./CreateCategory.css";
 
 function CreateCategory() {
 
-    const [show, setShow] = useState(false);
-    const [err, setErr] = useState("");
+    const [showToast, setShowToast] = useState(false);
+    const [textToast, setTextToast] = useState('');
+    const [typeToast, setTypeToast] = useState('');
 
     const submitForm = async (event) => {
         event.preventDefault();
         const titleValue = document.querySelector("#category-label")?.value;
         const response = await apiFetch("category", { method: "POST", body: JSON.stringify({ title:titleValue })})
         if(!response?.ok) {
-            setErr(response?.data);
-            setShow(true);
+            setTextToast(response?.data);
+            setShowToast(true);
+            setTypeToast('error');
         }
         document.querySelector("#create-category").reset();
     };
@@ -36,7 +38,7 @@ function CreateCategory() {
                     </div>
                 </Col>   
             </Row>
-            <ErrorModal show={show} changeShow={setShow} err={err} />
+            <GenericToast type={typeToast} text={textToast}  show={showToast} setShow={setShowToast} />
         </Container>
     );
 }

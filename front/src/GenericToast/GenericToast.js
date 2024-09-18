@@ -1,19 +1,23 @@
 import { Toast } from "react-bootstrap";
 import "./GenericToast.css"
 
-function GenericToast ({variant = "primary", type = "Succes", text = "Action realisee avec succes" }) {
+function GenericToast ({type = "Succes", text = "Action realisee avec succes", show = false , setShow}) {
+
+    const typeToVariant = {
+        error: 'danger',
+        success: 'success',
+        warn: 'warning',
+        black: 'dark',
+        primary: 'primary'
+    };
+
     return (
         <div id="generic-toast">
-            <Toast delay={5000} bg={variant}>
+            <Toast delay={5000} autohide={true} bg={typeToVariant[type]} show={show} onClose={()=> {setShow(false)}} position='top-center'>
                 <Toast.Header>
-                    <img
-                    src="holder.js/20x20?text=%20"
-                    className="rounded me-2"
-                    alt=""
-                    />
-                    <strong className="me-auto">{type}</strong>
+                    <strong className="me-auto">{type[0]?.toUpperCase() + type?.substring(1)}</strong>
                 </Toast.Header>
-                <Toast.Body className={bg === 'Dark' && 'text-white'}>
+                <Toast.Body className={['danger', 'dark'].includes(typeToVariant[type]) && 'text-white'}>
                     {text}
                 </Toast.Body>
             </Toast>
